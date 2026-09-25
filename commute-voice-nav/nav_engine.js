@@ -1,8 +1,11 @@
 /* 음성 안내 엔진 — 브라우저(window.NavEngine)와 Node(require) 양쪽에서 같은 코드를 쓴다.
  *
  * 경로 규칙은 route_guidance.py와 같다.
- *   최단: 거리 / A: 지나는 교차 지점 A 점수 합 / B: 경사 위험·계단 구간 길이 / C: 급한 전환 + 횡단 이벤트
- *   A·B·C는 최단 경로 × CAP 이하 경로 중 지표가 가장 작은 것 (비용 = 거리 + λ·지표, λ를 바꿔 가며 탐색)
+ *   지표: A = 지나는 교차 지점 A 점수 합 / B = 경사 위험·계단 구간 길이 / C = 급한 전환 + 횡단 이벤트
+ *   기준(mode)은 체크한 지표 문자열: "최단"(아무것도 안 고름), "A", "B", "C", "AB", "AC", "BC", "ABC"
+ *   후보 경로: 비용 = 거리 + Σ λ_k·지표_k 로 λ 조합을 바꿔 가며 최단경로를 구한다(거리 ≤ 최단 × CAP).
+ *   선택: 체크한 지표가 어느 것도 최단 경로보다 나빠지지 않는 후보 중, Σ(지표_k / 최단의 지표_k)가 가장 작은 것
+ *         (= 줄어든 비율의 합이 가장 큰 것). 같으면 짧은 것. 지표 하나만 고르면 route_guidance.py와 같은 결과.
  * 안내 규칙
  *   회전: 경로 노드에서 방향이 25° 이상 바뀌면 안내. 50m 전 "50미터 앞에서 ○○", 15m 전 "곧 ○○"
  *   위험: 교차 지점·경사 구간 시작·구간 안 급한 전환을 경로 위 위치로 바꿔, 30m 앞에 오면 한 번 안내
@@ -17,9 +20,11 @@
   "use strict";
 
   const CAP = 1.3;
-  const LAMBDAS = [0, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 5000, 20000];
-  const MODES = ["최단", "A", "B", "C"];
-  const METRIC = { 최단: "len", A: "aSum", B: "bLen", C: "cEv" };
+  const LAMBDAS = [0, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 5000, 20000];   // 지표 하나일 때
+  const GRID = { A: [0, 5, 20, 100, 500, 5000], B: [0, 0.5, 2, 5, 20, 200], C: [0, 5, 20, 100, 500, 5000] }; // 여러 개일 때
+  const MODES = ["최단", "A", "B", "C", "AB", "AC", "BC", "ABC"];
+  const METRIC = { A: "aSum", B: "bLen", C: "cEv" };
+  const critOf = (mode) => (mode === "최단" || !mode ? [] : mode.split(""));
   const TURN_TEXT = "길이 크게 꺾이는 곳입니다.";
   const DIST_STEPS = [10, 20, 30, 50, 100, 150, 200, 300];
   const DEFAULTS = {
@@ -85,7 +90,9 @@
     return { node: best, d: bd };
   };
 
-  Graph.prototype.dijkstra = function (src, mode, lam) {
+  /** lams = {A: λ, B: λ, C: λ} (없으면 0) */
+  Graph.prototype.dijkstra = function (src, lams) {
+    const la = lams.A || 0, lb = lams.B || 0, lc = lams.C || 0;
     const n = this.nxy.length;
     const dist = new Float64Array(n).fill(Infinity), prevN = new Int32Array(n).fill(-1), prevE = new Int32Array(n).fill(-1);
     dist[src] = 0;
@@ -97,11 +104,8 @@
       if (d > dist[u]) continue;
       for (const { t, i } of this.adj[u]) {
         const e = this.data.edges[i], c = this.cross[t];
-        let pen = 0;
-        if (mode === "A") pen = c ? c.a : 0;
-        else if (mode === "B") pen = e.b;
-        else if (mode === "C") pen = e.turns.length + (c ? c.c : 0);
-        const nd = d + e.len + lam * pen;
+        const nd = d + e.len + (la ? la * (c ? c.a : 0) : 0) + (lb ? lb * e.b : 0)
+          + (lc ? lc * (e.turns.length + (c ? c.c : 0)) : 0);
         if (nd < dist[t]) { dist[t] = nd; prevN[t] = u; prevE[t] = i; push([nd, t]); }
       }
     }
@@ -116,8 +120,8 @@
     return { len, aSum, a3, bLen, stairs, cEv: turns + cCross, nCross };
   };
 
-  Graph.prototype.bestFor = function (src, targets, mode, lam) {
-    const { dist, prevN, prevE } = this.dijkstra(src, mode, lam);
+  Graph.prototype.bestFor = function (src, targets, lams) {
+    const { dist, prevN, prevE } = this.dijkstra(src, lams);
     let g = -1;
     targets.forEach((t) => { if (dist[t] < Infinity && (g < 0 || dist[t] < dist[g])) g = t; });
     if (g < 0) return null;
@@ -128,22 +132,39 @@
       nodes.push(prevN[n]);
     }
     nodes.reverse(); edges.reverse();
-    return { nodes, edges, stats: this.stats(nodes, edges), lam, gate: g, mode };
+    return { nodes, edges, stats: this.stats(nodes, edges), lams, gate: g };
   };
 
-  /** 모드별 경로. targets 생략 시 모든 문. */
+  /** 기준(mode)별 경로. targets 생략 시 모든 문. */
   Graph.prototype.route = function (src, mode, targets) {
     targets = targets || this.data.gates.map((g) => g.node);
-    const shortest = this.bestFor(src, targets, "최단", 0);
-    if (!shortest || mode === "최단") return shortest && Object.assign(shortest, { shortest });
-    const limit = shortest.stats.len * CAP, m = METRIC[mode];
-    let best = shortest;
-    for (const lam of LAMBDAS.slice(1)) {
-      const r = this.bestFor(src, targets, mode, lam);
+    const crit = critOf(mode);
+    const shortest = this.bestFor(src, targets, {});
+    if (!shortest) return null;
+    if (!crit.length) return Object.assign({}, shortest, { mode: "최단", crit, shortest });
+    const limit = shortest.stats.len * CAP;
+    const base = crit.map((k) => shortest.stats[METRIC[k]]);
+    const score = (st) => {                      // 나빠지는 지표가 있으면 Infinity
+      let sc = 0;
+      for (let j = 0; j < crit.length; j++) {
+        const v = st[METRIC[crit[j]]];
+        if (v > base[j] + 1e-9) return Infinity;
+        sc += base[j] > 0 ? v / base[j] : 0;
+      }
+      return sc;
+    };
+    // λ 조합: 지표 하나면 LAMBDAS, 여러 개면 GRID의 곱
+    let combos = crit.length === 1 ? LAMBDAS.slice(1).map((l) => ({ [crit[0]]: l })) : [{}];
+    if (crit.length > 1) crit.forEach((k) => { combos = combos.flatMap((c) => GRID[k].map((l) => Object.assign({}, c, { [k]: l }))); });
+    let best = shortest, bestSc = score(shortest.stats);
+    for (const lams of combos) {
+      if (!Object.values(lams).some((v) => v > 0)) continue;
+      const r = this.bestFor(src, targets, lams);
       if (!r || r.stats.len > limit + 1e-6) continue;
-      if (r.stats[m] < best.stats[m] - 1e-9 || (Math.abs(r.stats[m] - best.stats[m]) < 1e-9 && r.stats.len < best.stats.len)) best = r;
+      const sc = score(r.stats);
+      if (sc < bestSc - 1e-9 || (Math.abs(sc - bestSc) < 1e-9 && r.stats.len < best.stats.len)) { best = r; bestSc = sc; }
     }
-    return Object.assign({}, best, { mode, shortest });
+    return Object.assign({}, best, { mode, crit, shortest });
   };
 
   // ------------------------------------------------------------ 경로 -> 선, 회전, 위험
@@ -208,21 +229,21 @@
   function bucket(v, steps) { let b = steps[0]; steps.forEach((x) => { if (Math.abs(x - v) < Math.abs(b - v)) b = x; }); return b; }
   const KOR = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  /** 경로 시작 안내 조각: 모드, 목적지, 총 거리, 최단 대비 얻는 것과 잃는 것. */
+  /** 경로 시작 안내 조각: 기준, 목적지, 총 거리, 최단 대비 얻는 것과 잃는 것. */
   Graph.prototype.summaryKeys = function (r) {
     const keys = ["start", "mode_" + r.mode, "dest_" + this.gateByNode[r.gate]];
     keys.push("total_" + Math.min(2000, Math.max(100, Math.round(r.stats.len / 100) * 100)));
-    if (r.mode === "최단") return keys;
+    if (!r.crit.length) return keys;
     const s0 = r.shortest.stats, s1 = r.stats;
-    if (s1[METRIC[r.mode]] >= s0[METRIC[r.mode]] - 1e-9) { keys.push("same_as_shortest"); return keys; }
+    if (r.crit.every((k) => s1[METRIC[k]] >= s0[METRIC[k]] - 1e-9)) { keys.push("same_as_shortest"); return keys; }
     const extra = s1.len - s0.len;
     if (extra >= 5) keys.push("extra_" + bucket(extra, [10, 20, 30, 50, 100, 150, 200, 300, 400, 500]));
-    if (r.mode === "A") { const k = s0.a3 - s1.a3; keys.push(k > 0 ? "gainA_" + Math.min(8, k) : "gainA_score"); }
-    if (r.mode === "B") keys.push("gainB_" + bucket(s0.bLen - s1.bLen, [50, 100, 150, 200, 300, 400, 500]));
-    if (r.mode === "C") keys.push("gainC_" + Math.min(8, Math.max(1, Math.round(s0.cEv - s1.cEv))));
-    if (r.mode !== "A" && s1.aSum > s0.aSum + 0.5) keys.push("trade_A");
-    if (r.mode !== "B" && s1.bLen > s0.bLen + 20) keys.push("trade_B");
-    if (r.mode !== "C" && s1.cEv > s0.cEv + 0.5) keys.push("trade_C");
+    if (r.crit.includes("A") && s1.aSum < s0.aSum) { const k = s0.a3 - s1.a3; keys.push(k > 0 ? "gainA_" + Math.min(8, k) : "gainA_score"); }
+    if (r.crit.includes("B") && s0.bLen - s1.bLen >= 25) keys.push("gainB_" + bucket(s0.bLen - s1.bLen, [50, 100, 150, 200, 300, 400, 500]));
+    if (r.crit.includes("C") && s0.cEv - s1.cEv >= 0.5) keys.push("gainC_" + Math.min(8, Math.max(1, Math.round(s0.cEv - s1.cEv))));
+    if (!r.crit.includes("A") && s1.aSum > s0.aSum + 0.5) keys.push("trade_A");
+    if (!r.crit.includes("B") && s1.bLen > s0.bLen + 20) keys.push("trade_B");
+    if (!r.crit.includes("C") && s1.cEv > s0.cEv + 0.5) keys.push("trade_C");
     return keys;
   };
 
@@ -346,5 +367,5 @@
     return out;
   }
 
-  return { Graph, Navigator, FreeWalker, walkTrace, MODES, METRIC, DEFAULTS, CAP };
+  return { Graph, Navigator, FreeWalker, walkTrace, MODES, METRIC, DEFAULTS, CAP, critOf };
 });

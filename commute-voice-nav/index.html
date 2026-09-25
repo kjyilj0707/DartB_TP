@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>통학로 음성 안내</title>
-<meta name="description" content="중앙대·숭실대 통학로를 시각장애인 위험도 지표(A 횡단, B 경사, C 인지 복잡성) 기준으로 골라 음성으로 안내하는 시연 페이지">
+<meta name="description" content="중앙대·숭실대 통학로를 시각장애인 위험도 지표(A 횡단, B 경사, C 인지 복잡성) 중 고른 기준으로 찾아 음성으로 안내하는 시연 페이지">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
@@ -43,6 +43,8 @@ legend{padding:0 6px; font-size:13px; color:var(--muted); font-weight:500}
 .seg label:has(input:focus-visible){outline:3px solid var(--focus); outline-offset:2px}
 .seg .dot{width:12px; height:12px; border-radius:50%; flex:none; box-shadow:0 0 0 2px #050506}
 .seg small{display:block; font-size:12px; font-weight:400; opacity:.8}
+.seg .box{width:18px; height:18px; flex:none; border:2px solid currentColor; border-radius:4px; display:grid; place-items:center}
+.seg label:has(input:checked) .box::after{content:"✓"; font-size:13px; font-weight:700; line-height:1}
 select,input[type=range]{width:100%}
 select{min-height:44px; background:var(--surface2); color:var(--text); border:1px solid var(--line2); border-radius:10px; padding:8px 10px; font:inherit}
 .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
@@ -84,7 +86,7 @@ h2{font-size:18px; margin:22px 0 8px}
 <div class="wrap">
 <header>
   <h1>통학로 음성 안내</h1>
-  <p>중앙대·숭실대 통학로를 시각장애인 위험도 지표 중 <b>하나를 골라</b> 그 기준으로 가장 나은 경로를 찾고, 걷는 동안 회전과 위험 지점을 음성으로 알려줍니다. A 횡단 위험, B 경사, C 인지 복잡성은 합치지 않습니다.</p>
+  <p>중앙대·숭실대 통학로를 시각장애인 위험도 지표(A 횡단 위험, B 경사, C 인지 복잡성) 중 <b>원하는 것을 골라</b> 그 기준으로 가장 나은 경로를 찾고, 걷는 동안 회전과 위험 지점을 음성으로 알려줍니다. 지표 점수를 하나로 합치지는 않습니다.</p>
   <p class="notice">프로젝트 시연용입니다. 실제 보행 보조 기기가 아니며, GPS 위치는 도심에서 수십 m까지 틀릴 수 있습니다.</p>
 </header>
 
@@ -99,14 +101,14 @@ h2{font-size:18px; margin:22px 0 8px}
     </fieldset>
 
     <fieldset>
-      <legend>경로 기준 (하나만 고릅니다)</legend>
+      <legend>경로 기준 (여러 개 고를 수 있습니다)</legend>
       <div class="seg" id="modes">
-        <label><input type="radio" name="mode" value="최단" checked><span class="dot" style="background:var(--m-short)"></span><span>최단<small>거리만</small></span></label>
-        <label><input type="radio" name="mode" value="A"><span class="dot" style="background:var(--m-a)"></span><span>A 횡단<small>위험한 횡단 적게</small></span></label>
-        <label><input type="radio" name="mode" value="B"><span class="dot" style="background:var(--m-b)"></span><span>B 경사<small>가파른 구간 적게</small></span></label>
-        <label><input type="radio" name="mode" value="C"><span class="dot" style="background:var(--m-c)"></span><span>C 판단<small>꺾임·횡단 적게</small></span></label>
+        <label><input type="checkbox" name="crit" value="A"><span class="box" aria-hidden="true"></span><span class="dot" style="background:var(--m-a)"></span><span>A 횡단<small>위험한 횡단 적게</small></span></label>
+        <label><input type="checkbox" name="crit" value="B"><span class="box" aria-hidden="true"></span><span class="dot" style="background:var(--m-b)"></span><span>B 경사<small>가파른 구간 적게</small></span></label>
+        <label><input type="checkbox" name="crit" value="C"><span class="box" aria-hidden="true"></span><span class="dot" style="background:var(--m-c)"></span><span>C 판단<small>꺾임·횡단 적게</small></span></label>
       </div>
-      <p class="cap">A·B·C 경로는 최단 경로의 1.3배 안에서만 찾습니다.</p>
+      <p class="cap" id="critNow" aria-live="polite">선택 없음: 최단 경로</p>
+      <p class="cap">최단 경로의 1.3배 안에서, 고른 지표가 하나도 나빠지지 않으면서 가장 많이 줄어드는 경로를 찾습니다. 지표 점수를 합치지는 않습니다.</p>
     </fieldset>
 
     <fieldset>
@@ -159,8 +161,9 @@ h2{font-size:18px; margin:22px 0 8px}
     </div>
 
     <h2>이 출발지에서 기준별 경로 비교</h2>
+    <p class="cap">굵은 선 = 선택한 기준의 경로, 점선 = 다른 기준의 경로. 보라색은 두 개 이상 고른 조합입니다.</p>
     <div class="tablewrap"><table id="cmp" aria-describedby="cmpCap">
-      <thead><tr><th scope="col">기준</th><th scope="col">거리</th><th scope="col">A 점수 합</th><th scope="col">A 3점 이상</th><th scope="col">B 경사 위험</th><th scope="col">C 판단 이벤트</th></tr></thead>
+      <thead><tr><th scope="col">경로 기준</th><th scope="col">거리</th><th scope="col">A 점수 합</th><th scope="col">A 3점 이상</th><th scope="col">B 경사 위험</th><th scope="col">C 판단 이벤트</th></tr></thead>
       <tbody></tbody>
     </table></div>
     <p class="cap" id="cmpCap">A 점수 합: 지나는 교차 지점 A 점수(위험 미확인은 지원 점수)의 합. B: 경사 위험(8.3% 초과)과 계단 구간 길이. C: 급한 방향 전환 + 횡단(일단 1·이단 2·삼단 3).</p>
@@ -175,7 +178,8 @@ h2{font-size:18px; margin:22px 0 8px}
       <li>회전: 50m 전에 "50미터 앞에서 오른쪽으로 도세요", 15m 전에 "곧 오른쪽으로 도세요".</li>
       <li>위험: 교차 지점, 경사 위험 구간 시작, 길이 크게 꺾이는 곳을 30m 전에 한 번 알려줍니다.</li>
       <li>경로 이탈: 경로에서 30m(또는 GPS 정확도의 2.5배) 넘게 5초 이상 벗어나면 경로를 다시 찾습니다.</li>
-      <li>시뮬레이션(출발지 153곳 × 기준 4개 × GPS 오차 0~15m) 결과, 오차 5m에서 회전 안내 99.6%, 위험 안내 99.5%가 해당 지점 전에 나왔습니다.</li>
+      <li>경로 기준을 여러 개 고르면: 고른 지표가 어느 것도 최단 경로보다 나빠지지 않는 경로 중, 각 지표가 줄어든 비율의 합이 가장 큰 경로를 고릅니다.</li>
+      <li>시뮬레이션(출발지 153곳 × 기준 조합 8개 × GPS 오차 0~15m = 4,896회) 결과, 오차 5m에서 회전 안내 99.7%, 위험 안내 99.5%가 해당 지점 전에 나왔습니다.</li>
     </ul>
   </div>
 </div>
@@ -186,7 +190,11 @@ h2{font-size:18px; margin:22px 0 8px}
 <script>
 "use strict";
 const MODE_COLOR = {"최단":"#d9d9df", A:"#f0983a", B:"#ff7aa2", C:"#5cc3dd"};
-const MODE_LABEL = {"최단":"최단", A:"A 횡단", B:"B 경사", C:"C 판단"};
+const COMBO_COLOR = "#b79cff";                                   // 두 개 이상 고른 조합
+const NAME = {A:"A 횡단", B:"B 경사", C:"C 판단"};
+const colorOf = (m) => MODE_COLOR[m] || COMBO_COLOR;
+const labelOf = (m) => m === "최단" ? "최단" : m.split("").map((k) => NAME[k]).join(" + ");
+function curMode(){ const c = [...document.querySelectorAll("input[name=crit]:checked")].map((i) => i.value).sort().join(""); return c || "최단"; }
 const $ = (s) => document.querySelector(s);
 const val = (name) => document.querySelector(`input[name=${name}]:checked`).value;
 let clips = {}, G = null, data = null, nav = null, free = null, startNode = null;
@@ -271,24 +279,26 @@ function targets(){ const v = $("#gate").value; return v === "" ? null : [+v]; }
 function preview(){
   if (!G || startNode == null) return;
   layers.alt.clearLayers(); layers.route.clearLayers(); layers.hz.clearLayers();
-  const mode = val("mode"), rows = [];
-  NavEngine.MODES.forEach((m) => {
+  const mode = curMode(), rows = [];
+  $("#critNow").textContent = mode === "최단" ? "선택 없음: 최단 경로" : "선택: " + labelOf(mode);
+  const show = ["최단", "A", "B", "C"]; if (!show.includes(mode)) show.push(mode);
+  show.forEach((m) => {
     const r = G.route(startNode, m, targets()); if (!r) return;
     const p = G.plan(r);
     rows.push({m, s:r.stats});
     const line = p.pts.map(ll);
     if (m === mode) {
       L.polyline(line, {color:"#050506", weight:10, opacity:.9}).addTo(layers.route);
-      L.polyline(line, {color:MODE_COLOR[m], weight:6}).addTo(layers.route);
+      L.polyline(line, {color:colorOf(m), weight:6}).addTo(layers.route);
       p.hazards.forEach((h) => L.circleMarker(ll(p.at(h.s)), {radius:6, color:"#050506", weight:2, fillColor:"#ffd08a", fillOpacity:1})
         .bindTooltip(h.keys.map((k) => clips[k]).join(" ")).addTo(layers.hz));
-    } else L.polyline(line, {color:MODE_COLOR[m], weight:3, opacity:.55, dashArray:"6 6"}).addTo(layers.alt);
+    } else L.polyline(line, {color:colorOf(m), weight:3, opacity:.55, dashArray:"6 6"}).addTo(layers.alt);
   });
   const b = layers.route.getLayers().length ? L.featureGroup(layers.route.getLayers()).getBounds() : null;
   if (b && b.isValid()) map.fitBounds(b.pad(0.35), {maxZoom:17});
   const [x,y] = data.nodes[startNode];
   layers.me.clearLayers(); L.circleMarker([y,x], {radius:9, color:"#050506", weight:3, fillColor:"#ffffff", fillOpacity:1}).bindTooltip("출발지").addTo(layers.me);
-  $("#cmp tbody").innerHTML = rows.map(({m, s}) => `<tr class="${m === mode ? "sel" : ""}"><td><span class="dot" style="background:${MODE_COLOR[m]}"></span>${MODE_LABEL[m]}</td><td>${Math.round(s.len)}m</td><td>${s.aSum.toFixed(0)}</td><td>${s.a3}곳</td><td>${Math.round(s.bLen)}m</td><td>${s.cEv}</td></tr>`).join("");
+  $("#cmp tbody").innerHTML = rows.map(({m, s}) => `<tr class="${m === mode ? "sel" : ""}"><td><span class="dot" style="background:${colorOf(m)}"></span>${labelOf(m)}${m === mode ? " (선택)" : ""}</td><td>${Math.round(s.len)}m</td><td>${s.aSum.toFixed(0)}</td><td>${s.a3}곳</td><td>${Math.round(s.bLen)}m</td><td>${s.cEv}</td></tr>`).join("");
 }
 
 // ------------------------------------------------ 안내 시작/멈춤
@@ -309,7 +319,7 @@ function feed(pos){
 }
 function drawActive(){
   layers.route.clearLayers(); layers.hz.clearLayers(); layers.alt.clearLayers();
-  const p = nav.plan, line = p.pts.map(ll), c = MODE_COLOR[nav.mode];
+  const p = nav.plan, line = p.pts.map(ll), c = colorOf(nav.mode);
   L.polyline(line, {color:"#050506", weight:10, opacity:.9}).addTo(layers.route);
   L.polyline(line, {color:c, weight:6}).addTo(layers.route);
   p.hazards.forEach((h) => L.circleMarker(ll(p.at(h.s)), {radius:6, color:"#050506", weight:2, fillColor:"#ffd08a", fillOpacity:1}).bindTooltip(h.keys.map((k) => clips[k]).join(" ")).addTo(layers.hz));
@@ -317,7 +327,7 @@ function drawActive(){
 function begin(kind){
   stopAll(); unlockAudio();
   $("#startBtn").disabled = true; $("#freeBtn").disabled = true; $("#stopBtn").disabled = false;
-  if (kind === "route") nav = new NavEngine.Navigator(G, val("mode"), {gate: targets() ? targets()[0] : null});
+  if (kind === "route") nav = new NavEngine.Navigator(G, curMode(), {gate: targets() ? targets()[0] : null});
   else free = new NavEngine.FreeWalker(G);
   if (val("loc") === "gps") {
     if (!("geolocation" in navigator)) { status("이 브라우저는 위치를 지원하지 않습니다."); return stopAll(); }
@@ -329,7 +339,7 @@ function begin(kind){
     status("GPS로 안내 중");
   } else {
     // 가상 걷기: 출발지에서 선택한 기준 경로를 초속 1m로 걷는 GPS 기록을 만들어 재생
-    const r = G.route(startNode, val("mode"), targets());
+    const r = G.route(startNode, curMode(), targets());
     const plan = G.plan(r), noise = +$("#noise").value;
     simTrace = NavEngine.walkTrace(G, plan, {speed:1.0, noise, seed:Date.now() % 100000});
     simIdx = 0;
@@ -354,7 +364,7 @@ $("#startBtn").onclick = () => begin("route");
 $("#freeBtn").onclick = () => begin("free");
 $("#stopBtn").onclick = () => { stopAll(); status("멈췄습니다."); };
 document.querySelectorAll("input[name=school]").forEach((i) => i.onchange = () => { stopAll(); loadSchool(val("school")); });
-document.querySelectorAll("input[name=mode]").forEach((i) => i.onchange = () => { if (!nav) preview(); });
+document.querySelectorAll("input[name=crit]").forEach((i) => i.onchange = () => { if (!nav) preview(); });
 $("#gate").onchange = () => { if (!nav) preview(); };
 $("#origin").onchange = (e) => { startNode = +e.target.value; if (!nav) preview(); };
 document.querySelectorAll("input[name=loc]").forEach((i) => i.onchange = () => { $("#simOpts").style.display = val("loc") === "sim" ? "grid" : "none"; });
@@ -365,7 +375,7 @@ const qs = new URLSearchParams(location.search);
 if (qs.get("school")) document.querySelector(`input[name=school][value=${qs.get("school")}]`).checked = true;
 fetch("clips.json").then((r) => r.json()).then((c) => { clips = c; return loadSchool(val("school")); })
   .then(() => { if (qs.get("demo")) {
-      document.querySelector(`input[name=mode][value="${qs.get("demo")}"]`).checked = true; preview();
+      qs.get("demo").split("").forEach((k) => { const i = document.querySelector(`input[name=crit][value="${k}"]`); if (i) i.checked = true; }); preview();
       if (qs.get("speed")) $("#speedup").value = qs.get("speed");
       $("#speedup").dispatchEvent(new Event("input")); begin("route"); } })
   .catch((e) => status("데이터를 불러오지 못했습니다. 웹 서버(http)로 열어 주세요. " + e));
