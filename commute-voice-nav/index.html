@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>통학로 음성 안내</title>
+<meta name="description" content="중앙대·숭실대 통학로를 시각장애인 위험도 지표(A 횡단, B 경사, C 인지 복잡성) 기준으로 골라 음성으로 안내하는 시연 페이지">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#050506; --surface:#101013; --surface2:#17171c; --line:#2a2a31; --line2:#3a3a43;
+  --text:#f5f5f7; --muted:#a8a8b3; --faint:#72727d; --focus:#ffffff;
+  --m-short:#d9d9df; --m-a:#f0983a; --m-b:#ff7aa2; --m-c:#5cc3dd;
+  --ok:#7ddc9a; --warn:#ffd08a;
+  --sans:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg); color:var(--text); margin:0}
+body{font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased}
+:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
+.wrap{max-width:1240px; margin:0 auto; padding:0 16px 64px}
+header{border-bottom:1px solid var(--line); padding:18px 0 14px}
+header h1{font-size:clamp(22px,3.6vw,32px); line-height:1.25; margin:0; letter-spacing:-.02em}
+header p{margin:6px 0 0; color:var(--muted); font-size:14px; max-width:78ch}
+.notice{margin-top:10px; font-size:13px; color:var(--warn)}
+.layout{display:grid; grid-template-columns:minmax(300px,380px) 1fr; gap:18px; margin-top:18px}
+@media (max-width:860px){ .layout{grid-template-columns:1fr} }
+.layout>*{min-width:0}
+.tablewrap{overflow-x:auto}
+.seg{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.panel{display:grid; gap:14px; align-content:start}
+fieldset{min-width:0; border:1px solid var(--line); border-radius:14px; padding:12px 14px 14px; margin:0; background:var(--surface)}
+legend{padding:0 6px; font-size:13px; color:var(--muted); font-weight:500}
+.seg{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px}
+.seg label{position:relative; display:flex; align-items:center; gap:8px; min-height:48px; padding:8px 12px; border:1px solid var(--line2); border-radius:10px; cursor:pointer; font-size:15px}
+.seg input{position:absolute; opacity:0; pointer-events:none}
+.seg label:has(input:checked){background:var(--text); color:#050506; border-color:var(--text); font-weight:700}
+.seg label:has(input:focus-visible){outline:3px solid var(--focus); outline-offset:2px}
+.seg .dot{width:12px; height:12px; border-radius:50%; flex:none; box-shadow:0 0 0 2px #050506}
+.seg small{display:block; font-size:12px; font-weight:400; opacity:.8}
+select,input[type=range]{width:100%}
+select{min-height:44px; background:var(--surface2); color:var(--text); border:1px solid var(--line2); border-radius:10px; padding:8px 10px; font:inherit}
+.row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.row label{font-size:14px; color:var(--muted)}
+.btns{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.btn{min-height:52px; background:var(--text); color:#050506; border:0; border-radius:12px; padding:10px 14px; font:inherit; font-size:16px; font-weight:700; cursor:pointer}
+.btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line2)}
+.btn.wide{grid-column:1/-1}
+.btn[disabled]{opacity:.4; cursor:not-allowed}
+.status{font-size:14px; color:var(--muted); min-height:1.6em}
+#map{height:min(62vh,620px); min-height:360px; border-radius:14px; border:1px solid var(--line); background:#0c0c0f}
+.leaflet-tile-pane{filter:brightness(.62) contrast(1.1) saturate(.6)}
+.light .leaflet-tile-pane{filter:none}
+.leaflet-container{font-family:var(--sans)}
+.leaflet-tooltip{background:#101013; color:#f5f5f7; border:1px solid #3a3a43; font-size:13px}
+.leaflet-tooltip:before{display:none}
+.maptools{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+.maptools button{min-height:40px; background:transparent; color:var(--text); border:1px solid var(--line2); border-radius:999px; padding:6px 14px; font:inherit; font-size:14px; cursor:pointer}
+table{width:100%; border-collapse:collapse; font-size:14px; margin-top:12px}
+th,td{padding:8px 6px; border-bottom:1px solid var(--line); text-align:right; font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted); font-weight:500; font-size:13px}
+tr.sel td{color:var(--text); font-weight:700}
+tr td:first-child .dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px}
+.cap{font-size:12px; color:var(--faint); margin-top:6px}
+#log{list-style:none; margin:0; padding:0; display:grid; gap:6px; max-height:260px; overflow:auto}
+#log li{background:var(--surface2); border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px}
+#log li b{font-family:var(--mono); font-size:12px; color:var(--faint); font-weight:400; margin-right:6px}
+#log li.hazard{border-left:4px solid var(--warn)}
+#log li.maneuver{border-left:4px solid var(--m-c)}
+#log li.start,#log li.arrive{border-left:4px solid var(--ok)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+h2{font-size:18px; margin:22px 0 8px}
+.explain{color:#cfcfd6; font-size:14px; max-width:80ch}
+.explain li{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>통학로 음성 안내</h1>
+  <p>중앙대·숭실대 통학로를 시각장애인 위험도 지표 중 <b>하나를 골라</b> 그 기준으로 가장 나은 경로를 찾고, 걷는 동안 회전과 위험 지점을 음성으로 알려줍니다. A 횡단 위험, B 경사, C 인지 복잡성은 합치지 않습니다.</p>
+  <p class="notice">프로젝트 시연용입니다. 실제 보행 보조 기기가 아니며, GPS 위치는 도심에서 수십 m까지 틀릴 수 있습니다.</p>
+</header>
+
+<div class="layout">
+  <div class="panel">
+    <fieldset>
+      <legend>학교</legend>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="school" value="chungang" checked>중앙대</label>
+        <label><input type="radio" name="school" value="soongsil">숭실대</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>경로 기준 (하나만 고릅니다)</legend>
+      <div class="seg" id="modes">
+        <label><input type="radio" name="mode" value="최단" checked><span class="dot" style="background:var(--m-short)"></span><span>최단<small>거리만</small></span></label>
+        <label><input type="radio" name="mode" value="A"><span class="dot" style="background:var(--m-a)"></span><span>A 횡단<small>위험한 횡단 적게</small></span></label>
+        <label><input type="radio" name="mode" value="B"><span class="dot" style="background:var(--m-b)"></span><span>B 경사<small>가파른 구간 적게</small></span></label>
+        <label><input type="radio" name="mode" value="C"><span class="dot" style="background:var(--m-c)"></span><span>C 판단<small>꺾임·횡단 적게</small></span></label>
+      </div>
+      <p class="cap">A·B·C 경로는 최단 경로의 1.3배 안에서만 찾습니다.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>목적지</legend>
+      <select id="gate" aria-label="목적지 문"></select>
+    </fieldset>
+
+    <fieldset>
+      <legend>위치</legend>
+      <div class="seg">
+        <label><input type="radio" name="loc" value="sim" checked>가상 걷기(시연)</label>
+        <label><input type="radio" name="loc" value="gps">내 위치(GPS)</label>
+      </div>
+      <div id="simOpts" style="margin-top:10px; display:grid; gap:8px">
+        <div class="row"><label for="origin">출발지</label>
+          <select id="origin" aria-label="가상 출발지"></select></div>
+        <p class="cap" style="margin:0">지도를 눌러 출발지를 바꿀 수도 있습니다.</p>
+        <div class="row"><label for="noise">GPS 오차 <span id="noiseV">5</span>m</label>
+          <input id="noise" type="range" min="0" max="20" step="5" value="5"></div>
+        <div class="row"><label for="speedup">재생 속도 <span id="speedV">4</span>배</label>
+          <input id="speedup" type="range" min="1" max="8" step="1" value="4"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>음성</legend>
+      <div class="seg">
+        <label><input type="radio" name="voice" value="gpt" checked>GPT 음성</label>
+        <label><input type="radio" name="voice" value="browser">브라우저 음성</label>
+        <label><input type="radio" name="voice" value="sr">화면낭독기</label>
+      </div>
+      <div class="row" style="margin-top:10px"><label for="rate">말 속도 <span id="rateV">1.2</span>배</label>
+        <input id="rate" type="range" min="0.8" max="2" step="0.1" value="1.2"></div>
+      <p class="cap">화면낭독기: 안내 문장을 VoiceOver·TalkBack이 읽도록 화면에만 띄웁니다.</p>
+    </fieldset>
+
+    <div class="btns">
+      <button class="btn" id="startBtn">안내 시작</button>
+      <button class="btn ghost" id="stopBtn" disabled>멈춤</button>
+      <button class="btn ghost wide" id="freeBtn">경로 없이 주변 위험만 듣기</button>
+    </div>
+    <div class="status" id="status" role="status"></div>
+  </div>
+
+  <div>
+    <div id="map" role="img" aria-label="통학로 지도. 선택한 경로와 위험 지점이 표시됩니다."></div>
+    <div class="maptools">
+      <button id="fitBtn">전체 보기</button>
+      <button id="lightBtn" aria-pressed="false">밝은 지도</button>
+    </div>
+
+    <h2>이 출발지에서 기준별 경로 비교</h2>
+    <div class="tablewrap"><table id="cmp" aria-describedby="cmpCap">
+      <thead><tr><th scope="col">기준</th><th scope="col">거리</th><th scope="col">A 점수 합</th><th scope="col">A 3점 이상</th><th scope="col">B 경사 위험</th><th scope="col">C 판단 이벤트</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="cap" id="cmpCap">A 점수 합: 지나는 교차 지점 A 점수(위험 미확인은 지원 점수)의 합. B: 경사 위험(8.3% 초과)과 계단 구간 길이. C: 급한 방향 전환 + 횡단(일단 1·이단 2·삼단 3).</p>
+
+    <h2>안내 기록</h2>
+    <ul id="log" aria-live="polite"></ul>
+    <div id="srLive" class="sr" aria-live="assertive"></div>
+
+    <h2>안내 규칙</h2>
+    <ul class="explain">
+      <li>출발 전: 경로 기준, 목적지, 총 거리, 최단 경로보다 얼마나 더 걷는지, 무엇이 줄고 무엇이 늘어나는지를 먼저 말합니다.</li>
+      <li>회전: 50m 전에 "50미터 앞에서 오른쪽으로 도세요", 15m 전에 "곧 오른쪽으로 도세요".</li>
+      <li>위험: 교차 지점, 경사 위험 구간 시작, 길이 크게 꺾이는 곳을 30m 전에 한 번 알려줍니다.</li>
+      <li>경로 이탈: 경로에서 30m(또는 GPS 정확도의 2.5배) 넘게 5초 이상 벗어나면 경로를 다시 찾습니다.</li>
+      <li>시뮬레이션(출발지 153곳 × 기준 4개 × GPS 오차 0~15m) 결과, 오차 5m에서 회전 안내 99.6%, 위험 안내 99.5%가 해당 지점 전에 나왔습니다.</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="nav_engine.js"></script>
+<script>
+"use strict";
+const MODE_COLOR = {"최단":"#d9d9df", A:"#f0983a", B:"#ff7aa2", C:"#5cc3dd"};
+const MODE_LABEL = {"최단":"최단", A:"A 횡단", B:"B 경사", C:"C 판단"};
+const $ = (s) => document.querySelector(s);
+const val = (name) => document.querySelector(`input[name=${name}]:checked`).value;
+let clips = {}, G = null, data = null, nav = null, free = null, startNode = null;
+let timer = null, watchId = null, simTrace = null, simIdx = 0;
+
+// ------------------------------------------------ 지도
+const map = L.map("map", {zoomControl:true, preferCanvas:true});
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:19, attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+const layers = {net:L.layerGroup().addTo(map), alt:L.layerGroup().addTo(map), route:L.layerGroup().addTo(map), hz:L.layerGroup().addTo(map), me:L.layerGroup().addTo(map)};
+$("#fitBtn").onclick = () => fit();
+$("#lightBtn").onclick = (e) => { const on = document.body.classList.toggle("light"); e.target.setAttribute("aria-pressed", on); e.target.textContent = on ? "어두운 지도" : "밝은 지도"; };
+function fit(){ if (data) map.fitBounds(L.latLngBounds(data.nodes.map(([x,y]) => [y,x])), {padding:[20,20]}); }
+const ll = (xy) => { const [lon,lat] = G.proj.from(xy[0], xy[1]); return [lat, lon]; };
+
+// ------------------------------------------------ 음성
+const audioCache = {};
+const queue = []; let speaking = false;
+function say(ev){
+  addLog(ev);
+  if (val("voice") === "sr") { $("#srLive").textContent = ev.text; return; }
+  queue.push(ev); if (!speaking) next();
+}
+function next(){
+  const ev = queue.shift();
+  if (!ev) { speaking = false; return; }
+  if (nav && nav.isStale(ev)) return next();              // 이미 지나친 지점 안내는 버린다
+  speaking = true;
+  playKeys(ev.keys.slice()).then(next);
+}
+function playKeys(keys){
+  if (!keys.length) return Promise.resolve();
+  const k = keys.shift();
+  return playOne(k).then(() => playKeys(keys));
+}
+function playOne(key){
+  const text = clips[key] || key, rate = +$("#rate").value;
+  if (val("voice") === "browser" || !clips[key]) return speakBrowser(text, rate);
+  return new Promise((resolve) => {
+    const a = audioCache[key] || (audioCache[key] = new Audio(`audio/${key}.mp3`));
+    a.playbackRate = rate; a.currentTime = 0;
+    let done = false, fallback = false;
+    const fin = () => { if (!done) { done = true; resolve(); } };
+    const toBrowser = () => { if (fallback || done) return; fallback = true; speakBrowser(text, rate).then(fin); };
+    setTimeout(() => { if (!fallback) fin(); }, (1500 + text.length * 250) / rate);   // 끝 신호가 안 와도 멈추지 않게
+    a.onended = fin;
+    a.onerror = toBrowser;                                      // 파일이 없으면 브라우저 음성
+    a.play().catch(toBrowser);
+  });
+}
+function speakBrowser(text, rate){
+  return new Promise((res) => {
+    if (!("speechSynthesis" in window)) return res();
+    const u = new SpeechSynthesisUtterance(text); u.lang = "ko-KR"; u.rate = rate;
+    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    setTimeout(fin, (1500 + text.length * 250) / rate);
+    u.onend = fin; u.onerror = fin; speechSynthesis.speak(u);
+  });
+}
+function stopAudio(){ queue.length = 0; Object.values(audioCache).forEach((a) => a.pause()); if ("speechSynthesis" in window) speechSynthesis.cancel(); speaking = false; }
+function addLog(ev){
+  const li = document.createElement("li"); li.className = ev.type;
+  const t = new Date(); li.innerHTML = `<b>${t.toTimeString().slice(0,8)}</b>`; li.append(ev.text);
+  $("#log").prepend(li);
+}
+
+// ------------------------------------------------ 데이터
+async function loadSchool(tag){
+  status("불러오는 중…");
+  data = await (await fetch(`data_${tag}.json`)).json();
+  G = new NavEngine.Graph(data, clips);
+  layers.net.clearLayers();
+  data.edges.forEach((e) => L.polyline(e.xy.map(([x,y]) => [y,x]), {color:"#b4b4c0", weight:2, opacity:.5, interactive:false}).addTo(layers.net));
+  data.gates.forEach((g) => { const [x,y] = data.nodes[g.node]; L.circleMarker([y,x], {radius:8, color:"#050506", weight:2, fillColor:"#7ddc9a", fillOpacity:1}).bindTooltip(g.name, {permanent:true, direction:"top", offset:[0,-8]}).addTo(layers.net); });
+  $("#gate").innerHTML = `<option value="">가장 가까운 문</option>` + data.gates.map((g) => `<option value="${g.node}">${g.name}</option>`).join("");
+  $("#origin").innerHTML = data.origins.map((n, i) => `<option value="${n}">표본 출발지 ${i + 1}</option>`).join("");
+  startNode = data.origins[0]; fit(); preview(); status("");
+}
+function status(t){ $("#status").textContent = t; }
+
+// ------------------------------------------------ 경로 미리보기와 비교표
+function targets(){ const v = $("#gate").value; return v === "" ? null : [+v]; }
+function preview(){
+  if (!G || startNode == null) return;
+  layers.alt.clearLayers(); layers.route.clearLayers(); layers.hz.clearLayers();
+  const mode = val("mode"), rows = [];
+  NavEngine.MODES.forEach((m) => {
+    const r = G.route(startNode, m, targets()); if (!r) return;
+    const p = G.plan(r);
+    rows.push({m, s:r.stats});
+    const line = p.pts.map(ll);
+    if (m === mode) {
+      L.polyline(line, {color:"#050506", weight:10, opacity:.9}).addTo(layers.route);
+      L.polyline(line, {color:MODE_COLOR[m], weight:6}).addTo(layers.route);
+      p.hazards.forEach((h) => L.circleMarker(ll(p.at(h.s)), {radius:6, color:"#050506", weight:2, fillColor:"#ffd08a", fillOpacity:1})
+        .bindTooltip(h.keys.map((k) => clips[k]).join(" ")).addTo(layers.hz));
+    } else L.polyline(line, {color:MODE_COLOR[m], weight:3, opacity:.55, dashArray:"6 6"}).addTo(layers.alt);
+  });
+  const b = layers.route.getLayers().length ? L.featureGroup(layers.route.getLayers()).getBounds() : null;
+  if (b && b.isValid()) map.fitBounds(b.pad(0.35), {maxZoom:17});
+  const [x,y] = data.nodes[startNode];
+  layers.me.clearLayers(); L.circleMarker([y,x], {radius:9, color:"#050506", weight:3, fillColor:"#ffffff", fillOpacity:1}).bindTooltip("출발지").addTo(layers.me);
+  $("#cmp tbody").innerHTML = rows.map(({m, s}) => `<tr class="${m === mode ? "sel" : ""}"><td><span class="dot" style="background:${MODE_COLOR[m]}"></span>${MODE_LABEL[m]}</td><td>${Math.round(s.len)}m</td><td>${s.aSum.toFixed(0)}</td><td>${s.a3}곳</td><td>${Math.round(s.bLen)}m</td><td>${s.cEv}</td></tr>`).join("");
+}
+
+// ------------------------------------------------ 안내 시작/멈춤
+function stopAll(){
+  clearInterval(timer); timer = null;
+  if (watchId != null) navigator.geolocation.clearWatch(watchId); watchId = null;
+  nav = null; free = null; stopAudio();
+  $("#startBtn").disabled = false; $("#freeBtn").disabled = false; $("#stopBtn").disabled = true;
+}
+function feed(pos){
+  const out = nav ? nav.update(pos) : free.update(pos);
+  out.forEach(say);
+  layers.me.clearLayers();
+  L.circleMarker([pos.lat, pos.lon], {radius:8, color:"#050506", weight:3, fillColor:"#ffffff", fillOpacity:1}).addTo(layers.me);
+  if (pos.acc) L.circle([pos.lat, pos.lon], {radius:pos.acc, color:"#ffffff", weight:1, fillOpacity:.06, interactive:false}).addTo(layers.me);
+  if (nav && nav.plan && out.some((e) => e.type === "reroute" || e.type === "start")) drawActive();
+  if (nav && nav.done) { status("도착했습니다."); stopAll(); }
+}
+function drawActive(){
+  layers.route.clearLayers(); layers.hz.clearLayers(); layers.alt.clearLayers();
+  const p = nav.plan, line = p.pts.map(ll), c = MODE_COLOR[nav.mode];
+  L.polyline(line, {color:"#050506", weight:10, opacity:.9}).addTo(layers.route);
+  L.polyline(line, {color:c, weight:6}).addTo(layers.route);
+  p.hazards.forEach((h) => L.circleMarker(ll(p.at(h.s)), {radius:6, color:"#050506", weight:2, fillColor:"#ffd08a", fillOpacity:1}).bindTooltip(h.keys.map((k) => clips[k]).join(" ")).addTo(layers.hz));
+}
+function begin(kind){
+  stopAll(); unlockAudio();
+  $("#startBtn").disabled = true; $("#freeBtn").disabled = true; $("#stopBtn").disabled = false;
+  if (kind === "route") nav = new NavEngine.Navigator(G, val("mode"), {gate: targets() ? targets()[0] : null});
+  else free = new NavEngine.FreeWalker(G);
+  if (val("loc") === "gps") {
+    if (!("geolocation" in navigator)) { status("이 브라우저는 위치를 지원하지 않습니다."); return stopAll(); }
+    say({type:"start", keys:["locating"], text:clips.locating});
+    watchId = navigator.geolocation.watchPosition(
+      (p) => feed({lon:p.coords.longitude, lat:p.coords.latitude, acc:p.coords.accuracy, t:p.timestamp / 1000}),
+      (err) => { status("위치를 받을 수 없습니다: " + err.message); stopAll(); },
+      {enableHighAccuracy:true, maximumAge:1000, timeout:20000});
+    status("GPS로 안내 중");
+  } else {
+    // 가상 걷기: 출발지에서 선택한 기준 경로를 초속 1m로 걷는 GPS 기록을 만들어 재생
+    const r = G.route(startNode, val("mode"), targets());
+    const plan = G.plan(r), noise = +$("#noise").value;
+    simTrace = NavEngine.walkTrace(G, plan, {speed:1.0, noise, seed:Date.now() % 100000});
+    simIdx = 0;
+    feed(Object.assign({}, simTrace[0], {acc:noise}));                 // 출발 전 요약
+    const step = () => {
+      if (speaking && simIdx === 0) return;                            // 요약을 다 듣고 출발
+      if (++simIdx >= simTrace.length) { status("가상 걷기가 끝났습니다."); return stopAll(); }
+      feed(Object.assign({}, simTrace[simIdx], {acc:noise}));
+    };
+    timer = setInterval(step, 1000 / +$("#speedup").value);
+    status(`가상 걷기 중 (GPS 오차 ${noise}m, ${$("#speedup").value}배속)`);
+  }
+}
+let unlocked = false;
+function unlockAudio(){  // iOS 등: 사용자가 누른 순간에 소리를 한 번 열어 둔다
+  if (unlocked) return; unlocked = true;
+  try { const a = new Audio(); a.muted = true; a.play().catch(() => {}); } catch (e) {}
+}
+
+// ------------------------------------------------ 이벤트
+$("#startBtn").onclick = () => begin("route");
+$("#freeBtn").onclick = () => begin("free");
+$("#stopBtn").onclick = () => { stopAll(); status("멈췄습니다."); };
+document.querySelectorAll("input[name=school]").forEach((i) => i.onchange = () => { stopAll(); loadSchool(val("school")); });
+document.querySelectorAll("input[name=mode]").forEach((i) => i.onchange = () => { if (!nav) preview(); });
+$("#gate").onchange = () => { if (!nav) preview(); };
+$("#origin").onchange = (e) => { startNode = +e.target.value; if (!nav) preview(); };
+document.querySelectorAll("input[name=loc]").forEach((i) => i.onchange = () => { $("#simOpts").style.display = val("loc") === "sim" ? "grid" : "none"; });
+map.on("click", (e) => { if (nav || free || !G) return; startNode = G.nearestNode(G.proj.to(e.latlng.lng, e.latlng.lat)).node; preview(); });
+[["noise","noiseV"],["speedup","speedV"],["rate","rateV"]].forEach(([a,b]) => $("#"+a).oninput = (e) => $("#"+b).textContent = e.target.value);
+
+const qs = new URLSearchParams(location.search);
+if (qs.get("school")) document.querySelector(`input[name=school][value=${qs.get("school")}]`).checked = true;
+fetch("clips.json").then((r) => r.json()).then((c) => { clips = c; return loadSchool(val("school")); })
+  .then(() => { if (qs.get("demo")) {
+      document.querySelector(`input[name=mode][value="${qs.get("demo")}"]`).checked = true; preview();
+      if (qs.get("speed")) $("#speedup").value = qs.get("speed");
+      $("#speedup").dispatchEvent(new Event("input")); begin("route"); } })
+  .catch((e) => status("데이터를 불러오지 못했습니다. 웹 서버(http)로 열어 주세요. " + e));
+</script>
+</body>
+</html>
