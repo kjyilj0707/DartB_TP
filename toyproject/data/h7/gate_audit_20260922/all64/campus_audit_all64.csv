@@ -1,0 +1,65 @@
+﻿univ_id,univ_name,old_count,review_status,unit_hold,gates_A,gates_B,gates_C_no_coordinate,gates_held,official_named_gates,osm_boundary_available,barrier_candidate_records,path_candidate_records,findings,source_url,review_date
+11124718,숭실대학교,5,후문귀속검토,False,4,1,0,0,정문 / 중문 / 남문 / 북문,True,5,11,"현행 공식 AI대학 안내도는 정문·중문·남문·북문 4곳, 지하주차장 진입로 별도 표기. 카카오 후문이 다섯 번째 보행 문인지 미확정. OSM 후문 이름만으로 좌표 대체 금지.",https://ai.ssu.ac.kr/introduce/contact,2026-09-22
+7813437,연세대학교 신촌캠퍼스,5,기존문재검증,False,5,0,0,0,정문 / 동문 / 서문 / 남문 / 북문,True,25,50,2025 공식 수목 정리 위치도에 정문·동문·서문·남문·북문. 추가 카카오 후문은 북문 근처 65m이나 동일 문으로 자동 병합 금지. 의료원 출입구 별도 구분.,https://devcms.yonsei.ac.kr/che/community_che/notice.do?articleNo=158331&attachNo=135491&mode=download,2026-09-22
+11038502,경희대학교 서울캠퍼스,3,기존문재검증,False,2,1,0,0,정문 / 후문,True,1,24,공식 캠퍼스맵은 정문(등용문)·후문 표시. 남문은 경희남중고 쪽이며 2020년 통제 공지 근거만으로 현행 보행 운영 확정 금지.,https://www.khu.ac.kr/kor/user/mapManager/view.do?menuNo=200356,2026-09-22
+8505917,장로회신학대학교,3,공식근거미확보,False,0,3,0,0,,False,0,0,기존 남문·서문·북문 좌표 모두 동일 기준 재검증 대상으로 유지. 대학 공식 문 운영 자료 미확보. 이름 없는 인접 OSM 대학 폴리곤은 귀속 불명으로 채택하지 않음.,,2026-09-22
+11160006,중앙대학교 서울캠퍼스,3,기존문재검증,False,3,0,0,0,정문 / 중문 / 후문,True,0,7,2026 공식 수험생 안내에 서울 정문·중문·후문과 도보 이동 동선 표시. 병원 문과 부속학교 문은 별도 취급.,https://admission.cau.ac.kr/files/2026/2026_js_sk_mu.pdf,2026-09-22
+11350554,경기대학교 서울캠퍼스,2,기존문재검증,False,1,1,0,0,후문,True,0,1,서울 후문 경비실은 공식 전화번호부에 존재. 수원캠퍼스 교통 안내와 혼합 금지. 현재 보행 통로·정문 위치 재확인 필요.,https://www.kyonggi.ac.kr/www/searchTnTelnoListU.do?cpn=228&key=8816,2026-09-22
+11369827,고려대학교 서울캠퍼스,2,표본경계검토,False,0,4,0,0,,True,5,40,공식 자연계 찾아오는 길은 안암역 4번 출구 쪽 자연계 정문을 안내. 기존 2개 좌표만으로 인문·자연·의료 구역 전체를 대표할 수 없음.,https://ienergy.korea.ac.kr/tem_i/about/location.do,2026-09-22
+11325169,국민대학교,2,기존문재검증,False,1,1,0,0,정문,True,2,8,2026년 정문 차량 승인 공지 확인. 차량 제한을 보행 제한으로 해석하지 않음. 2020년 정문·후문 단일화 공지는 과거 임시 운영.,https://cms.kookmin.ac.kr/mse/bbs/form.do?articleNo=5932822&mode=view,2026-09-22
+17932927,동국대학교 서울캠퍼스,2,추가명명문확보,False,3,0,0,0,정문 / 후문 / 혜화문,True,2,10,"공식 안내에 정문·후문·중문, 카카오에서 혜화문 좌표 추가 확보. 건물 신공학관 출입구와 외부 경계 문 구분 필요.",https://ipsi.dongguk.edu/upload/file/20231018133028SZ7KD3.PDF,2026-09-22
+7927244,삼육대학교,2,별칭확인,False,2,0,0,0,정문 / 후문,True,0,7,공식 사무처 안내가 후문(동문)으로 병기. 후문과 동문을 별개의 문으로 중복 집계하지 않음. 버스 정류장 좌표와 실제 문 좌표 구분 필요.,https://www.syu.ac.kr/about-sahmyook/organization-department/administrative-organizations/business-affairs-jobs-in-charge/,2026-09-22
+11265361,서강대학교,2,추가명명문확보,False,3,0,0,0,정문 / 후문 / 남문,True,10,21,공식 2024 캠퍼스 배치도에 정문·후문·남문. 카카오 남문 좌표 추가 확보. 과거 코로나 통제는 현재 운영 근거로 쓰지 않음.,https://admission3.sogang.ac.kr/upload/GUIDES/20240229142500VXUCZB.pdf,2026-09-22
+11137036,서울대학교 관악캠퍼스,2,내부나들문구분,False,0,2,0,0,,True,2,67,카카오 나들문 G1~G20 확보. 공식 안내는 정문 통과 후 순환도로에서 G4·G5로 진입한다고 설명하므로 외부 캠퍼스 경계 문으로 일괄 추가 금지.,https://physics.snu.ac.kr/about/directions,2026-09-22
+10498806,서울시립대학교,2,추가문좌표필요,False,1,1,3,0,정문 / 미래문 / 이음문 / 하늘문,True,6,29,현행 공식 캠퍼스맵은 정문·미래문·이음문·하늘문 4개 명칭. 기존 후문과 새 이름의 대응 및 나머지 좌표 필요. 과거 배치도의 하늘못은 문이 아님.,https://www.uos.ac.kr/kor/html/auos/guide/map/map.do?identified=anonymous&menuid=2000001008001000000,2026-09-22
+26351246,성균관대학교 인문사회과학캠퍼스,2,추가문좌표필요,False,2,0,1,0,정문 / 후문 / 동문,True,0,11,공식 안내도에 정문·후문·동문. 기존 2개 수집은 전체 문 목록이 아님. 동문 위치·현행 보행 연결 확인 필요.,https://oldgsc.skku.edu/gsc_ko/about/contactus.do,2026-09-22
+11331177,성신여자대학교 돈암수정캠퍼스,2,명칭대응검토,False,1,1,0,0,후문,True,0,2,"2026년 셔틀 안내가 수정캠퍼스 후문을 명시. 2025 안내도는 정문·후문, 기존 CSV는 중문·후문. 카카오 입구 좌표와 정문·중문 대응 확인 필요.",https://www.sungshin.ac.kr/bbs/main_kor/3182/158602/artclView.do,2026-09-22
+11184697,이화여자대학교,2,추가명명문확보,False,3,0,3,0,정문 / 후문 / 서문 / 북문 / 북아현문 / 공학관문,True,0,13,현행 공식 주차 안내에 서문·북문·북아현문·공학관문 추가 존재. 카카오 북아현문 좌표 확보. 차량 시간표를 보행 운영시간으로 전용 금지.,https://ewha.ac.kr/ewha/intro/parking01.do,2026-09-22
+11211235,한양대학교 서울캠퍼스,2,지하접근분리,False,2,0,2,1,정문 / 후문 / 애지문 / 사근동출입로 / 건축관출입로,True,7,30,2026 공식 지도에 정문·후문·애지문·사근동출입로·건축관출입로. 애지문은 지하철 연결이므로 외부 도로 횡단보도 기반 분석에서 지상 문과 별도 층으로 분리.,https://hanyang.ac.kr/documents/20122/223827120/map_seoul_kor.pdf/c488e526-760d-0827-ecac-36b746ae24bd?download=true&t=1772521578173,2026-09-22
+8663561,홍익대학교 서울캠퍼스,2,기존문재검증,False,2,0,0,0,정문 / 후문,True,5,17,현행 공식 오시는 길에 정문·후문 도보 접근 안내. 부속초등학교 정문 후보는 대학 문에서 제외.,https://www.hongik.ac.kr/kr/introduction/directions.do,2026-09-22
+17384594,KAIST 서울캠퍼스,1,추가좌표검토,False,0,1,0,0,,True,1,2,OSM 무명 경계 후보 1곳. 고등과학원 안내는 과거 자료라 현행 정문·후문 여부 재확인 필요.,https://newton.kias.re.kr/ws_qis08/venue.htm,2026-09-22
+10148561,광운대학교,1,추가근거부족,False,0,1,0,0,,True,0,9,공식 정문 안내는 있으나 두 번째 문 미확인. 광운고등학교 결과 제외.,https://iit.kw.ac.kr/servlet/controller.home.admission.AdmissionSupportServlet?p_process=admissionInfo,2026-09-22
+8262964,덕성여자대학교,1,추가문좌표필요,False,1,0,1,0,정문 / 후문,True,0,5,공식 오시는 길에 정문·후문 구분. 기존 1개를 실제 총수로 볼 수 없음.,https://www.duksung.ac.kr/anthro/contents/contents.do?ciIdx=1474&menuId=1410,2026-09-22
+11333604,명지대학교 인문캠퍼스,1,추가좌표확보,False,0,2,0,0,,True,0,8,기존 후문 외 카카오 입구 확보. 공식 정문 안내도의 출입구 1~3은 주차 동선과 섞여 있어 세 문으로 세지 않음. PDF 시각 검증 실패.,https://www.mju.ac.kr/bbs/gsca/433/156948/download.do,2026-09-22
+8356870,상명대학교 서울캠퍼스,1,추가근거부족,False,0,1,0,0,,True,0,8,공식 접근 안내 확인. 두 번째 외부 보행 출입점은 미확인.,https://www.smu.ac.kr/kor/intro/road.do,2026-09-22
+7946584,서경대학교,1,추가문좌표필요,False,1,0,1,0,정문 / 서문,True,0,4,2025년 공식 공사 안내에 정문·서문. 현재 운영과 서문 좌표 확인 필요.,https://www.skuniv.ac.kr/notice/53864,2026-09-22
+9108449,서울과학기술대학교,1,추가좌표확보,False,3,0,0,0,정문 / 창의문 / 협동문,True,4,13,창의문·협동문 카카오 좌표 및 OSM foot=yes 일치. 공사로 정문 동선 변동 가능. 이전 제안의 bidx=891666 본문은 재열람 불가.,https://www.seoultech.ac.kr/service/info/notice?bidx=714956&bnum=4691&do=commonview,2026-09-22
+9879420,서울여자대학교 서울캠퍼스,1,추가문좌표필요,False,0,1,2,0,정문 / 남문,True,0,1,공식 박물관 안내에 정문·남문. 기숙사 안내의 후문과 남문 동일 여부 확인 필요.,https://museum.swu.ac.kr/skin/page/about04.html,2026-09-22
+7949668,세종대학교,1,추가문좌표필요,False,0,1,1,0,후문,True,0,2,공식 오시는 길에서 세종초등학교 쪽 후문 안내 확인. 후문 좌표 필요.,https://www.sejong.ac.kr/kor/intro/directions.do,2026-09-22
+7813439,숙명여자대학교,1,추가좌표확보,False,0,2,0,1,,True,0,8,"지혜문 좌표 확보. 제2창학캠퍼스 후문은 제1캠퍼스와 분리 보류. 2020년 공식 문 이름 공지는 검색 색인만 확인, 본문 재열람 실패.",https://www.sookmyung.ac.kr/kr/news/important-notice.do?articleNo=77152&mode=view,2026-09-22
+11244281,한국외국어대학교 서울캠퍼스,1,추가근거부족,False,0,1,0,0,,True,1,11,"OSM 정문은 기존 좌표 중복. 후문이라는 OSM 노드는 매칭 캠퍼스 경계 밖으로 제외, 대학 귀속 확인 필요.",https://www.hufs.ac.kr/hufs/11162/subview.do,2026-09-22
+11272875,한성대학교,1,추가근거부족,False,0,1,0,0,,True,0,5,공식 정문 안내 확인. 옛 지도 문 이름만으로 현재 보행 문을 확정하지 않음.,https://www.hansung.edu/bbs/campustown/2204/221366/artclView.do,2026-09-22
+19553259,KAIST 도곡캠퍼스,0,표본단위검토,True,0,0,0,0,,False,0,0,도곡 교육시설의 건물 출입구와 캠퍼스 경계 출입문 구분 필요.,https://www.kaist.ac.kr/kr/html/kaist/01140304.html,2026-09-22
+8132452,가톨릭대학교 성신교정,0,경계후보검토,False,0,0,0,0,,True,0,2,성신교정 OSM 경계 확보. 성심·성의교정 검색 결과를 혼합하지 않음. 공식 문 목록 미확인.,https://songsin.catholic.ac.kr/ko/index.do,2026-09-22
+8127185,가톨릭대학교 성의교정,0,공유부지검토,True,0,0,0,1,,False,0,0,카카오 출입구 1곳. 공식 안내에 학교 후문과 병원 문이 혼재하므로 귀속 및 보행 연결 확인 필요.,https://www.catholic.ac.kr/ko/about/location_songeui.do,2026-09-22
+8138835,감리교신학대학교,0,경계후보검토,False,0,0,0,0,,True,2,2,공식 기숙사 접근 안내에 교내 정문. OSM 무명 경계 후보 2곳은 별도 검증 필요.,https://www.mtu.ac.kr/mtuhouse/contents/view.do?mId=42,2026-09-22
+11025307,강서대학교,0,추가문좌표필요,False,0,0,0,0,,True,0,2,2026년 정문 차단기·횡단보도 공사 공지로 정문 존재 근거. 보행 위치 확인 필요.,https://www.gangseo.ac.kr/kcua/boardView?boardNum=20704&menuCode=BC0701,2026-09-22
+12840668,건국대학교 서울캠퍼스,0,추가좌표확보,False,3,2,0,2,건국문 / 상허문 / 일감문,True,0,13,"건국문·상허문·일감문 좌표 확보. 출입구1=일감문, 출입구2=상허문 근접 중복 제외. 출입문3·출입구4는 보행 확인 보류. 공식 신문은 2005년 자료.",https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955,2026-09-22
+1958037939,국방대학교 서울캠퍼스,0,표본단위검토,True,0,0,0,0,,False,0,0,서울 소재 시설의 현재 교육 기능과 표본 포함 기준 확인 필요. 군 시설 접근 제한을 일반 보행 문과 동일 취급하지 않음.,https://www.kndu.ac.kr/rinsa/index.do,2026-09-22
+24917807,덕성여자대학교 종로운현캠퍼스,0,표본단위검토,True,0,0,0,0,,False,0,0,종로 교육시설과 운현초등학교 등 인접 부지의 경계 분리 필요.,https://dilc.ds.ac.kr/about/about0602.php,2026-09-22
+8917867,동덕여자대학교,0,추가문좌표필요,False,0,0,0,0,,True,0,7,공공기관 과거 행사 안내에 정문·후문 구분. 현행 대학 지도 및 좌표 재확인 필요.,https://archive.sb.go.kr/isbcc/home/u/theme/view/49.do,2026-09-22
+21412515,백석대학교 서울캠퍼스,0,표본단위검토,True,0,0,0,0,,False,0,0,서울 대학원 시설로 안내. 대학원 중심 시설 포함 여부를 기존 제외 기준과 일치시켜야 함.,https://community.bu.ac.kr/graduateschool/3950/subview.do,2026-09-22
+8317120,백석예술대학교,0,경계확인필요,True,0,0,0,0,,False,0,0,학교 소재지는 확인되나 건물군과 캠퍼스 외부 경계 미확정. 출입문 0개로 해석 금지.,https://tis.bau.ac.kr/scam/auth/login.do,2026-09-22
+24447409,서울과학종합대학교,0,표본단위검토,True,0,0,0,0,,False,0,0,정식 명칭 서울과학종합대학원대학교. 대학원대학 제외 기준을 적용할지 검토.,https://intro.assist.ac.kr/,2026-09-22
+7940291,서울교육대학교,0,추가좌표확보,False,0,3,0,0,,True,0,2,사향문·청람문·쪽문 좌표 확보. 2026 모집요강 검색 색인의 서초문과 쪽문 동일 여부는 지도 확인 전 보류.,https://www.snue.ac.kr/snue/cm/cntnts/cntntsView.do?cntntsId=1176&mi=1372,2026-09-22
+7939462,서울기독대학교,0,추가문좌표필요,False,0,0,0,0,,True,0,0,2026 공식 모집요강 검색 색인에서 정문 안내. 지도와 보행 출입 위치 확인 필요.,https://admission.scu.ac.kr/api/file?filename=20260208_104809_944_4d02015b.pdf&path=entrance-guideline-files,2026-09-22
+11137164,서울대학교 연건캠퍼스,0,공유부지검토,True,0,0,0,0,,True,0,4,검색된 서울대학교병원 정문·후문은 대학 소속 보행 출입문으로 자동 편입하지 않음. 연건 경계 후보 별도 검토.,,2026-09-22
+1555825433,서울예술대학교 남산캠퍼스,0,경계확인필요,True,0,0,0,0,,False,0,0,남산캠퍼스의 현재 이용 구역·경계·보행 문을 뒷받침하는 공식 근거 부족.,,2026-09-22
+8139895,서울한영대학교,0,경계후보검토,False,0,0,0,0,,True,0,2,"OSM 경계 확보, 공식 출입문 목록 미확인. 도로 경계 교차는 후보만 생성.",https://ipsi.shyu.ac.kr/fro_end/html/main/,2026-09-22
+20599241,성공회대학교,0,경계후보검토,False,0,0,0,0,,True,0,1,"OSM 경계 확보, 공식 출입문 목록 미확인. 도로 연결 검토 필요.",https://skhu.ac.kr/enter/index.do,2026-09-22
+12817755,성신여자대학교 미아운정그린캠퍼스,0,추가문좌표필요,False,0,0,0,0,,True,0,0,2024 공식 공지에 운정 정문. 카카오 부설주차장 입구 및 건물 B2 입구를 보행 문으로 자동 인정하지 않음.,https://www.sungshin.ac.kr/bbs/main_kor/3208/124833/artclView.do,2026-09-22
+1675674517,이화여자대학교 의과대학,0,공유부지검토,True,0,0,0,0,,False,0,0,의대 건물 B2 출입 안내와 캠퍼스 경계 문을 구분. 병원과 공유하는 외부 접근 구역 확인 필요.,https://myr.ewha.ac.kr/dentist/notice/notice.do?articleNo=773462&mode=view,2026-09-22
+26379626,정화예술대학교 명동캠퍼스 남산관,0,표본단위검토,True,0,0,0,0,,False,0,0,남산관은 건물 단위 POI. 대학 전체 또는 다른 관과 중복 집계하지 않도록 단위 결정 필요.,https://www.junggu.seoul.kr/dong/hoehyeon/content.do?cmsid=13427,2026-09-22
+11237653,총신대학교 사당캠퍼스,0,경계후보검토,False,0,0,0,0,,True,0,2,사당 OSM 경계 확보. 양지캠퍼스와 구분해 공식 지도 및 출입문 확인 필요.,,2026-09-22
+8095775,추계예술대학교,0,추가문좌표필요,False,0,0,0,0,,False,0,0,2011년 공식 주차 안내에 정문·후문. 과거 차량 운영 근거이므로 현재 보행 출입은 미확인.,https://www.chugye.ac.kr/mbs/grad/jsp/board/view.jsp?boardId=92382&boardSeq=342970&id=grad_060601000000&mcategoryId=&spage=69,2026-09-22
+1111828096,태재대학교,0,경계확인필요,True,0,0,0,0,,False,0,0,교육시설 소재지는 확인했으나 대학 캠퍼스의 외부 출입 경계는 미확정.,https://graduate.taejae.ac.kr/,2026-09-22
+8135259,한국방송통신대학교 대학본부,0,경계후보검토,False,0,0,0,0,,True,0,2,대학본부 OSM 경계 확보. 지역대학과 분리하고 외부 보행 문 확인 필요.,https://admission.knou.ac.kr/sites/cs1/index.do,2026-09-22
+12552760,한국방송통신대학교 서울지역대학,0,표본단위검토,True,0,0,0,0,,False,0,0,서울지역대학 교육시설. 대학본부와 별도 캠퍼스로 비교할 기준 필요.,https://www.knou.ac.kr/bbs/knou/58/803348/artclView.do,2026-09-22
+17010755,한국성서대학교,0,경계후보검토,False,0,0,0,0,,True,0,4,OSM 경계 확보. 공식 문 이름·보행 운영 근거 미확인.,https://ipsi.bible.ac.kr/,2026-09-22
+26628690,한국예술종합학교 대학로캠퍼스,0,경계확인필요,True,0,0,0,0,,False,0,0,공식 대학로 오시는 길 확인. 건물 출입구와 캠퍼스 경계 구분 필요.,https://karts.ac.kr/main/index.do?menuId=010605000000,2026-09-22
+8149858,한국예술종합학교 서초동캠퍼스,0,공유부지검토,True,0,0,0,0,,False,0,0,공식 주차 안내에 정문. 예술의전당 인접 부지와 보행 연결 확인 필요.,https://www.karts.ac.kr/main/index.do?menuId=010606000000,2026-09-22
+8644095,한국예술종합학교 석관동캠퍼스,0,추가문좌표필요,False,0,0,0,0,,True,0,13,공식 안내가 돌곶이역 보행 접근과 신이문 쪽 차량 정문을 구분. 보행 진입 좌표를 먼저 확인할 대상.,https://karts.ac.kr/main/index.do?menuId=010603000000,2026-09-22
+11219441,한국체육대학교,0,추가좌표확보,False,2,0,0,0,정문 / 후문,True,2,3,"2026 공식 행사 공지에 정문·후문, OSM 두 좌표 확보. 정문 foot=yes, 후문 보행 허용 태그 없음.",https://www.knsu.ac.kr/knsu/unilife/notice.do?articleNo=54971&mode=view,2026-09-22
+10942308,한양여자대학교,0,추가문좌표필요,False,0,0,0,0,,True,0,13,"2018 공식 모집요강 지도 검색 색인에 정문·후문. 한양대 문과 혼합 금지, 현행 좌표 필요.",https://www.hywoman.ac.kr/resources/PV/2018_%EC%9E%AC%EC%99%B8%EA%B5%AD%EB%AF%BC%EB%B0%8F%EC%99%B8%EA%B5%AD%EC%9D%B8_%EB%AA%A8%EC%A7%91%EC%9A%94%EA%B0%95.pdf,2026-09-22
+1754204137,호원대학교 서울캠퍼스,0,주소불일치검토,True,0,0,0,0,,False,0,0,기존 화곡동 POI와 공식 입시 안내의 성내동 교육시설 주소가 다름. 이전·별도 시설 여부 확인 전 좌표 편입 보류.,https://howon.ac.kr/web/_admission/,2026-09-22
+18710749,홍익대학교 대학로캠퍼스,0,표본단위검토,True,0,0,0,0,,False,0,0,대학로 교육시설 공식 주소 확인. 건물형 시설의 출입문을 일반 캠퍼스와 동일 분석할지 결정 필요.,https://www.hongik.ac.kr/kr/introduction/directions-daehakro.do,2026-09-22

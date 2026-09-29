@@ -1,0 +1,25 @@
+﻿univ_id,univ_name,name,lat,lon,coordinate_source,source_id,source_url,status,analysis_ready,evidence_url
+11333604,명지대학교 인문캠퍼스,명지대학교 입구,37.5798245779138,126.923891021078,Kakao,27119687,http://place.map.kakao.com/27119687,추가위치_보행미검증,False,https://www.mju.ac.kr/bbs/gsca/433/156948/download.do
+9108449,서울과학기술대학교,서울과학기술대학교 창의문,37.63152013408023,127.08305249432318,Kakao,26639627,http://place.map.kakao.com/26639627,명명문_OSM보행태그일치,False,https://www.seoultech.ac.kr/service/info/notice?bidx=714956&bnum=4691&do=commonview
+9108449,서울과학기술대학교,서울과학기술대학교 협동문,37.6363709900495,127.075613734931,Kakao,26804858,http://place.map.kakao.com/26804858,명명문_OSM보행태그일치,False,https://www.seoultech.ac.kr/service/info/notice?bidx=714956&bnum=4691&do=commonview
+7813439,숙명여자대학교,숙명여자대학교 지혜문,37.5457100606441,126.963309444239,Kakao,18091048,http://place.map.kakao.com/18091048,추가위치_보행미검증,False,https://www.sookmyung.ac.kr/kr/news/important-notice.do?articleNo=77152&mode=view
+7813439,숙명여자대학교,숙명여자대학교 제2창학캠퍼스 후문,37.5441342779426,126.966562327127,Kakao,1164213179,http://place.map.kakao.com/1164213179,별도하위캠퍼스_보류,False,https://www.sookmyung.ac.kr/kr/news/important-notice.do?articleNo=77152&mode=view
+8127185,가톨릭대학교 성의교정,가톨릭대학교 출입구,37.5025143867259,127.005080156141,Kakao,18082968,http://place.map.kakao.com/18082968,병원공유부지_보류,False,https://www.catholic.ac.kr/ko/about/location_songeui.do
+12840668,건국대학교 서울캠퍼스,건국대학교 건국문,37.545150296654754,127.07663044995195,Kakao,10122700,http://place.map.kakao.com/10122700,명명문_현행보행미검증,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국대학교 상허문,37.539599090412,127.072587598758,Kakao,24520826,http://place.map.kakao.com/24520826,명명문_현행보행미검증,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국대학교 일감문,37.5390502671874,127.074220931761,Kakao,24521105,http://place.map.kakao.com/24521105,명명문_현행보행미검증,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국대학교 출입구4,37.5429365798393,127.07228305438,Kakao,18091041,http://place.map.kakao.com/18091041,번호문_보행미검증,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국대학교 출입문3,37.541952973462,127.071815914684,Kakao,18131649,http://place.map.kakao.com/18131649,번호문_보행미검증,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국대학교 출입구1,37.5390502472709,127.074252613335,Kakao,18131645,http://place.map.kakao.com/18131645,중복제외_일감문,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+12840668,건국대학교 서울캠퍼스,건국 대학교 출입구2,37.5395558702549,127.072542297135,Kakao,18151206,http://place.map.kakao.com/18151206,중복제외_상허문,False,https://popkon.konkuk.ac.kr/news/articleView.html?idxno=1955
+7940291,서울교육대학교,서울교육대학교 사향문,37.4892180773366,127.016576555259,Kakao,21962527,http://place.map.kakao.com/21962527,명명문_현행보행미검증,False,https://www.snue.ac.kr/snue/cm/cntnts/cntntsView.do?cntntsId=1176&mi=1372
+7940291,서울교육대학교,서울교육대학교 청람문,37.4903283840274,127.014564064946,Kakao,12663315,http://place.map.kakao.com/12663315,명명문_현행보행미검증,False,https://www.snue.ac.kr/snue/cm/cntnts/cntntsView.do?cntntsId=1176&mi=1372
+7940291,서울교육대학교,서울교육대학교 쪽문,37.4915192138678,127.016837140498,Kakao,388626939,http://place.map.kakao.com/388626939,쪽문_명칭보행미검증,False,https://www.snue.ac.kr/snue/cm/cntnts/cntntsView.do?cntntsId=1176&mi=1372
+11219441,한국체육대학교,한체대 정문,37.5177329,127.1315594,OSM,4648731583,https://www.openstreetmap.org/node/4648731583,명명문_OSM보행태그있음,False,https://www.knsu.ac.kr/knsu/unilife/notice.do?articleNo=54971&mode=view
+11219441,한국체육대학교,한체대 후문,37.5210963,127.1319403,OSM,4648731584,https://www.openstreetmap.org/node/4648731584,명명문_보행미검증,False,https://www.knsu.ac.kr/knsu/unilife/notice.do?articleNo=54971&mode=view
+11369827,고려대학교 서울캠퍼스,고려대학교 정경관후문,37.5868333780378,127.030107690954,Kakao,17569302,http://place.map.kakao.com/17569302,키워드추가_보행미검증,False,https://ienergy.korea.ac.kr/tem_i/about/location.do
+11369827,고려대학교 서울캠퍼스,고려대학교 의과대학 후문,37.5880714049665,127.026055948019,Kakao,1045105981,http://place.map.kakao.com/1045105981,키워드추가_보행미검증,False,https://ienergy.korea.ac.kr/tem_i/about/location.do
+17932927,동국대학교 서울캠퍼스,동국대학교 서울캠퍼스 혜화문,37.558491876337975,127.00301053382917,Kakao,2015502956,http://place.map.kakao.com/2015502956,명명문_현행보행미검증,False,https://ipsi.dongguk.edu/upload/file/20231018133028SZ7KD3.PDF
+11265361,서강대학교,서강대학교 남문,37.5494986137581,126.938996489276,Kakao,433433574,http://place.map.kakao.com/433433574,명명문_현행보행미검증,False,https://admission3.sogang.ac.kr/upload/GUIDES/20240229142500VXUCZB.pdf
+11184697,이화여자대학교,이화여자대학교 북아현문,37.56809505093891,126.95021794364267,Kakao,345254034,http://place.map.kakao.com/345254034,명명문_현행보행미검증,False,https://ewha.ac.kr/ewha/intro/parking01.do
+11211235,한양대학교 서울캠퍼스,한양대학교 서울캠퍼스 애지문,37.5559970175326,127.043854997598,Kakao,912654056,http://place.map.kakao.com/912654056,지하접근_별도층_보류,False,https://hanyang.ac.kr/documents/20122/223827120/map_seoul_kor.pdf/c488e526-760d-0827-ecac-36b746ae24bd?download=true&t=1772521578173

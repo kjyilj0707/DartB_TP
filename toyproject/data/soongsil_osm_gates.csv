@@ -1,0 +1,6 @@
+﻿문,lat,lon,osm_way_id,highway,seed_distance_m,coordinate_source,source_url
+정문,37.49574539051763,126.95467427206805,1382626815,pedestrian,29.3,OSM path-campus boundary intersection,https://www.openstreetmap.org/way/1382626815
+후문,37.49748344071796,126.9580171402232,1381930919,service,3.2,OSM path-campus boundary intersection,https://www.openstreetmap.org/way/1381930919
+남문,37.495104710710656,126.95892993894203,1381098993,service,17.9,OSM path-campus boundary intersection,https://www.openstreetmap.org/way/1381098993
+북문,37.4979268,126.9555384,367389875,service,5.1,OSM path-campus boundary intersection,https://www.openstreetmap.org/way/367389875
+중문,37.49543981257457,126.95670420300216,1381930941,service,2.3,OSM path-campus boundary intersection,https://www.openstreetmap.org/way/1381930941
